@@ -1,3 +1,4 @@
+import { Sitio } from 'src/comercio/entities/sitio.entity';
 import { Injectable } from '@nestjs/common';
 import { CreateComercioDto } from './dto/create-comercio.dto';
 import { InjectEntityManager } from '@nestjs/typeorm';
@@ -27,7 +28,14 @@ export class ComercioService {
   }
 
   async postComercio(dto: CreateComercioDto) {
-    return this.manager.save(Comercio, dto);
+    const sitio = dto.sitio
+      ? await this.manager.save(Sitio, dto.sitio)
+      : { id: dto.sitioId };
+
+    return this.manager.save(Comercio, {
+      ...dto,
+      SitioId: sitio.id,
+    });
   }
 
   async remove(id: number) {

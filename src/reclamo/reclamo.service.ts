@@ -8,6 +8,7 @@ import { Personal } from 'src/personal/entities/personal.entity';
 import { Denuncia } from 'src/denuncia/entities/denuncia.entity';
 import { MovimientoDenuncia } from 'src/denuncia/entities/movimiento-denuncia.entity';
 import { MovimientoReclamo } from './entities/movimiento-reclamo.entity';
+import { Desperfecto } from './entities/desperfecto.entity';
 
 @Injectable()
 export class ReclamoService {
@@ -26,8 +27,15 @@ export class ReclamoService {
     });
   }
 
-  create(dto: CreateReclamoDto) {
-    return this.manager.save(Reclamo, dto);
+  async create(dto: CreateReclamoDto) {
+    const desperfecto = dto.desperfecto
+      ? await this.manager.save(Desperfecto, dto.desperfecto)
+      : { id: dto.desperfectoId };
+
+    return this.manager.save(Reclamo, {
+      ...dto,
+      desperfectoId: desperfecto.id,
+    });
   }
 
   async postMovimiento(
