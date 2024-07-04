@@ -5,8 +5,6 @@ import { EntityManager } from 'typeorm';
 import { Reclamo } from './entities/reclamo.entity';
 import { CreateMovimientoReclamoDto } from './dto/create-movimiento-reclamo.dto';
 import { Personal } from 'src/personal/entities/personal.entity';
-import { Denuncia } from 'src/denuncia/entities/denuncia.entity';
-import { MovimientoDenuncia } from 'src/denuncia/entities/movimiento-denuncia.entity';
 import { MovimientoReclamo } from './entities/movimiento-reclamo.entity';
 import { Desperfecto } from './entities/desperfecto.entity';
 
@@ -27,13 +25,18 @@ export class ReclamoService {
     });
   }
 
-  async create(dto: CreateReclamoDto) {
+  async create({ documento, ...dto }: CreateReclamoDto) {
     const desperfecto = dto.desperfecto
       ? await this.manager.save(Desperfecto, dto.desperfecto)
       : { id: dto.desperfectoId };
 
+    const x = Number.isNaN(Number(documento))
+      ? { documento: documento as string }
+      : { personalId: documento as number };
+
     return this.manager.save(Reclamo, {
       ...dto,
+      ...x,
       desperfectoId: desperfecto.id,
     });
   }

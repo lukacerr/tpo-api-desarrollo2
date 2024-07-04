@@ -13,7 +13,7 @@ export class CreateDesperfectoDto {
 }
 
 export class CreateReclamoDto {
-  documento: string;
+  documento: string | number;
 
   @ApiProperty()
   @IsNumber()

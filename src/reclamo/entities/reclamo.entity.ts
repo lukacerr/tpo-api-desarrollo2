@@ -17,12 +17,18 @@ export class Reclamo {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ nullable: true })
   @RelationId((x: Reclamo) => x.vecino)
-  documento: string;
+  documento?: string;
   @JoinColumn({ name: 'documento' })
   @ManyToOne(() => Vecino, (x) => x.reclamos, { onDelete: 'CASCADE' })
   vecino?: Vecino;
+
+  @Column({ nullable: true })
+  @RelationId((x: Reclamo) => x.vecino)
+  personalId?: number;
+  @ManyToOne(() => Vecino, (x) => x.reclamos, { onDelete: 'CASCADE' })
+  personal?: Vecino;
 
   @Column()
   @RelationId((x: Reclamo) => x.sitio)

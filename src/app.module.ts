@@ -54,7 +54,7 @@ import { JwtModule } from '@nestjs/jwt';
         Rubro,
         Sitio,
       ],
-      synchronize: false,
+      synchronize: true,
     }),
     // * API MODULES
     VecinoModule,
