@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString, ValidateIf } from 'class-validator';
 import { ApiObjectProperty } from 'src/utils/api-object-property.decorator';
 
 export class CreateDesperfectoDto {
@@ -19,8 +19,14 @@ export class CreateReclamoDto {
   @IsNumber()
   sitioId: number;
 
+  @ValidateIf((x) => !x.desperfectoId)
   @ApiObjectProperty(CreateDesperfectoDto)
-  desperfecto: CreateDesperfectoDto;
+  desperfecto?: CreateDesperfectoDto;
+
+  @ValidateIf((x) => !x.desperfecto)
+  @ApiProperty()
+  @IsNumber()
+  desperfectoId?: number;
 
   @ApiPropertyOptional()
   @IsOptional()

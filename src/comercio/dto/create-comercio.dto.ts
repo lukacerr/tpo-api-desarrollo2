@@ -5,6 +5,7 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  ValidateIf,
 } from 'class-validator';
 import { ApiObjectProperty } from 'src/utils/api-object-property.decorator';
 
@@ -83,6 +84,12 @@ export class CreateComercioDto {
   @IsNumber()
   rubroId: number;
 
+  @ValidateIf((x) => !x.sitioId)
   @ApiObjectProperty(CreateSitioDto)
-  sitio: CreateSitioDto;
+  sitio?: CreateSitioDto;
+
+  @ValidateIf((x) => !x.sitio)
+  @ApiProperty()
+  @IsNumber()
+  sitioId?: number;
 }
