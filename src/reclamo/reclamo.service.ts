@@ -25,9 +25,12 @@ export class ReclamoService {
     });
   }
 
-  async create({ documento, ...dto }: CreateReclamoDto) {
-    const desperfecto = dto.desperfecto
-      ? await this.manager.save(Desperfecto, dto.desperfecto)
+  async create({ documento, desperfecto, ...dto }: CreateReclamoDto) {
+    const d = desperfecto
+      ? {
+          id: (await this.manager.insert(Desperfecto, desperfecto))
+            .identifiers[0].id,
+        }
       : { id: dto.desperfectoId };
 
     const x = Number.isNaN(Number(documento))
@@ -37,7 +40,7 @@ export class ReclamoService {
     return this.manager.save(Reclamo, {
       ...dto,
       ...x,
-      desperfectoId: desperfecto.id,
+      desperfectoId: d.id,
     });
   }
 
